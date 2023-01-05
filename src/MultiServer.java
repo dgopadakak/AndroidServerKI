@@ -1,7 +1,7 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import companies.AirlineOperator;
-import companies.Plane;
+import universities.UniversityOperator;
+import universities.Faculty;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 public class MultiServer
 {
     private ServerSocket serverSocket;
-    private static AirlineOperator ao = new AirlineOperator();
+    private static UniversityOperator uo = new UniversityOperator();
     private static String aoJSON;
     private final static String filePath = "info.txt";
 
@@ -22,6 +22,7 @@ public class MultiServer
     {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
+
         try {
             aoJSON = readFile(filePath, StandardCharsets.UTF_8);
         }
@@ -29,20 +30,26 @@ public class MultiServer
         {
             e.printStackTrace();
         }
-        ao = gson.fromJson(aoJSON, AirlineOperator.class);
+        uo = gson.fromJson(aoJSON, UniversityOperator.class);
 
 
-//        ao.addPlane("s7", new Plane("Airbus A380", "Green", 1, "Airbus factory",
-//                "11.10.2015", 525, 0, "Базируется в Москве"));
-//        ao.addPlane("s7", new Plane("Boeing 767", "White", 2, "Boeing factory",
-//                "25.06.2004", 224, 0, "Базируется в Санкт-Петербурге"));
+//        uo.addFaculty("КубГУ", new Faculty("ФКТиПМ", "Прикладная математика, " +
+//                "прикладная информатика, фундаментальная информатика", 1, "fpm@kubsu.ru",
+//                "1989", 1000, 0,
+//                "Факультет компьютеных технологий и прикладной математики"));
+//        uo.addFaculty("КубГУ", new Faculty("РГФ", "Лингвистика, перевод и переводоведение" +
+//                ", филология", 2, "rgf@kubsu.ru",
+//                "1938", 700, 1,
+//                "Факультет романо-германской филологии"));
 //
-//        ao.addPlane("Аэрофлот", new Plane("Cessna 750", "Red", 1, "Citation factory",
-//                "12.07.2001", 8, 0, "Базируется в Краснодаре"));
-//        ao.addPlane("Аэрофлот", new Plane("Airbus A380", "White", 2, "Airbus factory",
-//                "18.09.2015", 525, 0, "Базируется в Перми"));
+//        uo.addFaculty("КубГТУ", new Faculty("ИНГЭ", "Эксплуатация и обслуживание объектов " +
+//                "добычи нефти, бурение нефтяных и газовых скважин", 1, "inge@kgtu.kuban.ru",
+//                "1994", 500, 1, "Институт нефти, газа и энергетики"));
+//        uo.addFaculty("КубГТУ", new Faculty("ИСТИ", "Городское строительство и хозяйство, " +
+//                "Автомобильные дороги", 2, "isti@kgtu.kuban.ru", "2017", 500,
+//                0, "Институт строительства и транспортной инфраструктуры"));
 //
-//        aoJSON = gson.toJson(ao);
+//        aoJSON = gson.toJson(uo);
 //        writeFile(filePath, aoJSON);
 
         serverSocket = new ServerSocket(port);
@@ -116,8 +123,8 @@ public class MultiServer
                         String[] ids = inputLine.substring(1).split(",");
                         int groupID = Integer.parseInt(ids[0]);
                         int examID = Integer.parseInt(ids[1]);
-                        ao.delPlane(groupID, examID);
-                        aoJSON = gson.toJson(ao);
+                        uo.delFaculty(groupID, examID);
+                        aoJSON = gson.toJson(uo);
                         writeFile(filePath, aoJSON);
                         out.println(aoJSON);
                     }
@@ -129,9 +136,9 @@ public class MultiServer
                         String[] ids = parts[0].split(",");
                         int groupID = Integer.parseInt(ids[0]);
                         int examID = Integer.parseInt(ids[1]);
-                        Plane tempPlane = gson.fromJson(parts[1], Plane.class);
-                        ao.editPlane(groupID, examID, tempPlane);
-                        aoJSON = gson.toJson(ao);
+                        Faculty tempFaculty = gson.fromJson(parts[1], Faculty.class);
+                        uo.editFaculty(groupID, examID, tempFaculty);
+                        aoJSON = gson.toJson(uo);
                         writeFile(filePath, aoJSON);
                         out.println(aoJSON);
                     }
@@ -139,9 +146,9 @@ public class MultiServer
                     {
                         GsonBuilder gsonBuilder = new GsonBuilder();
                         Gson gson = gsonBuilder.create();
-                        AirlineOperator tempGo = gson.fromJson(inputLine.substring(1), AirlineOperator.class);
-                        ao.setAirlines(tempGo.getAirlines());
-                        aoJSON = gson.toJson(ao);
+                        UniversityOperator tempGo = gson.fromJson(inputLine.substring(1), UniversityOperator.class);
+                        uo.setUniversities(tempGo.getUniversities());
+                        aoJSON = gson.toJson(uo);
                         writeFile(filePath, aoJSON);
                     }
                     if ('a' == inputLine.charAt(0))
@@ -149,9 +156,9 @@ public class MultiServer
                         GsonBuilder gsonBuilder = new GsonBuilder();        // agroupName##json
                         Gson gson = gsonBuilder.create();
                         String[] parts = inputLine.substring(1).split("##");
-                        Plane tempPlane = gson.fromJson(parts[1], Plane.class);
-                        ao.addPlane(parts[0], tempPlane);
-                        aoJSON = gson.toJson(ao);
+                        Faculty tempFaculty = gson.fromJson(parts[1], Faculty.class);
+                        uo.addFaculty(parts[0], tempFaculty);
+                        aoJSON = gson.toJson(uo);
                         writeFile(filePath, aoJSON);
                         out.println(aoJSON);
                     }
