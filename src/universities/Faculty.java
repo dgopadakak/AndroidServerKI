@@ -7,11 +7,11 @@ public class Faculty
     int num;
     String email;
     String dateOfFoundation;
-    int students;
+    String students;
     int isHaveDistanceLearning;
     String comment;
 
-    public Faculty(String name, String directions, int num, String email, String dateOfFoundation, int students,
+    public Faculty(String name, String directions, int num, String email, String dateOfFoundation, String students,
                    int isHaveDistanceLearning, String comment)
     {
         this.name = name;
